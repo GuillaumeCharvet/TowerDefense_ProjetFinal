@@ -9,13 +9,22 @@ public class EnemyMoving : MonoBehaviour
     private float lerpValue = 0;
     [SerializeField]
     private List<Vector3> listOfPositions;
+    private float height = 0.5f;
     private int currentIndex = 0;
     private float currentLength;
-    private float speed = 1f;
+    private float speed = 4f;
+
+    [SerializeField]
+    private PathfindingAStar pathfindingAStar;
 
     private void Start()
     {
-        currentLength = Vector3.Distance(listOfPositions[0], listOfPositions[1]);
+        pathfindingAStar = FindObjectOfType<PathfindingAStar>();
+        listOfPositions = NoeudToVector3(pathfindingAStar.chemin);
+        if (listOfPositions != new List<Vector3>())
+        {
+            currentLength = Vector3.Distance(listOfPositions[0], listOfPositions[1]);
+        }
     }
 
     void Update()
@@ -35,5 +44,16 @@ public class EnemyMoving : MonoBehaviour
             }
             currentLength = Vector3.Distance(listOfPositions[currentIndex], listOfPositions[currentIndex + 1]);
         }
+    }
+
+    public List<Vector3> NoeudToVector3(List<Noeud> chemin)
+    {
+        var newList = new List<Vector3>();
+        for (int i = 0; i < chemin.Count; i++)
+        {
+            var newElement = new Vector3(chemin[i].x, height, chemin[i].y);
+            newList.Add(newElement);
+        }
+        return newList;
     }
 }

@@ -6,12 +6,12 @@ public class TerrainGenerator : MonoBehaviour
 {
     const int gridHeight = 28, gridWidth = 28;
     [SerializeField]
-    private int[,] grid = new int[gridHeight, gridWidth];
+    public int[,] grid = new int[gridHeight, gridWidth];
 
     [SerializeField]
     private GameObject blockChemin, blockPlaine;
 
-    void Start()
+    void Awake()
     {
         RandomizeGridValues();
 
@@ -37,8 +37,10 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int j = 0; j < grid.GetLength(1); j++)
             {
-                grid[i, j] = Random.Range(0, 2);
+                grid[i, j] = (int) Mathf.Floor(Random.Range(0f, 1.5f));
             }
         }
+        grid[0, 0] = 0;
+        grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1] = 0;
     }
 }

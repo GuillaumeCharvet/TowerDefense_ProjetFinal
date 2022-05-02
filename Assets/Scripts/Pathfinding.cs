@@ -6,7 +6,7 @@ public class Pathfinding : MonoBehaviour
 {
 
     private int[,] grid = new int[10, 10];
-
+/*
     void Start()
     {
         for (int i = 0; i < grid.GetLength(0); i++)
@@ -44,5 +44,5 @@ public class Pathfinding : MonoBehaviour
         var path = new List<>;
 
         return 
-    }
+    }*/
 }
