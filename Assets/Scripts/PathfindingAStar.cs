@@ -13,7 +13,7 @@ public struct Noeud
 public class PathfindingAStar : MonoBehaviour
 {
     private int[,] grid;
-    private Noeud depart, arrivee;
+    public Noeud depart, arrivee;
     public List<Noeud> chemin;
 
     [SerializeField]
@@ -21,17 +21,18 @@ public class PathfindingAStar : MonoBehaviour
     [SerializeField]
     private CSVReader csvReader;
     [SerializeField]
+    private PlacementTour placementTour;
+    [SerializeField]
     private List<Noeud> closedList = new List<Noeud>(), openList = new List<Noeud>(); 
 
     public void Awake()
     {
         grid = terrainGenerator.grid;
-        //grid = csvReader.grid;
         depart = new Noeud();
         arrivee = new Noeud();
-        depart.x = 0; depart.y = 0; arrivee.x = grid.GetLength(0) - 1; arrivee.y = grid.GetLength(1) - 1;
+        depart.x = 0; depart.y = 27; arrivee.x = grid.GetLength(0) - 3; arrivee.y = 0;
         depart.cout = 0; depart.heuristique = 0; arrivee.cout = 0; arrivee.heuristique = 0;
-        chemin = CheminPlusCourt(grid, arrivee, depart);
+        NouveauChemin(depart, arrivee);
     }
 
     public int CompareParHeuristique(Noeud n1, Noeud n2)
@@ -89,7 +90,7 @@ public class PathfindingAStar : MonoBehaviour
         while (currentNoeud.x != start.x || currentNoeud.y != start.y)
         {
             Noeud topParent = TrouveMeilleurParent(closedList, currentNoeud);
-            finaleListe.Add(topParent);
+            finaleListe.Insert(0, topParent);
             closedList.Remove(topParent);
             currentNoeud = topParent;
             i++;
@@ -166,6 +167,8 @@ public class PathfindingAStar : MonoBehaviour
 
     public List<Noeud> CheminPlusCourt(int[,] grid, Noeud objectif, Noeud depart)
     {
+        openList.Clear();
+        closedList.Clear();
         openList.Add(depart);
         int k = 0;
         while (openList.Count > 0)
@@ -199,5 +202,13 @@ public class PathfindingAStar : MonoBehaviour
         Debug.Log("Pas de chemin trouvé");
         Debug.Break();
         return new List<Noeud>();        
+    }
+
+    public void NouveauChemin(Noeud _depart, Noeud _arrivee)
+    {
+        grid = terrainGenerator.grid;
+        //grid = csvReader.grid;
+        //placementTour.DebugLogGrid(grid);
+        chemin = CheminPlusCourt(grid, _arrivee, _depart);
     }
 }

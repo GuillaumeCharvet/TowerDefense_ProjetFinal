@@ -8,22 +8,25 @@ public class EnemyMoving : MonoBehaviour
     [SerializeField]
     private float lerpValue = 0;
     [SerializeField]
-    private List<Vector3> listOfPositions;
+    public List<Vector3> listOfPositions;
     private float height = 1f;
-    private int currentIndex = 0;
-    private float currentLength;
+    public int currentIndex = 0;
+    public float currentLength;
     private float speed = 10f;
 
     [SerializeField]
     private PathfindingAStar pathfindingAStar;
+    [SerializeField]
+    private SpawnCube spawnCube;
 
     private void Start()
     {
+        spawnCube = GameObject.FindGameObjectWithTag("SpawnCube").GetComponent<SpawnCube>();
         pathfindingAStar = FindObjectOfType<PathfindingAStar>();
         listOfPositions = NoeudToVector3(pathfindingAStar.chemin);
         if (listOfPositions != new List<Vector3>())
         {
-            currentLength = Vector3.Distance(listOfPositions[0], listOfPositions[1]);
+            currentLength = GetNewCurrentLength();
         }
     }
 
@@ -40,10 +43,16 @@ public class EnemyMoving : MonoBehaviour
             currentIndex = Mathf.Min(currentIndex + 1, listOfPositions.Count - 2);
             if (currentIndex == listOfPositions.Count - 2)
             {
+                spawnCube.listeEnnemis.Remove(cube_transform.gameObject);
                 Destroy(cube_transform.gameObject);
             }
             currentLength = Vector3.Distance(listOfPositions[currentIndex], listOfPositions[currentIndex + 1]);
         }
+    }
+
+    public float GetNewCurrentLength()
+    {
+        return Vector3.Distance(listOfPositions[0], listOfPositions[1]);
     }
 
     public List<Vector3> NoeudToVector3(List<Noeud> chemin)

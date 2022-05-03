@@ -13,6 +13,8 @@ public class SpawnCube : MonoBehaviour
     private GameObject spawnedObject;
     [SerializeField]
     private Transform papa;
+    [SerializeField]
+    public List<GameObject> listeEnnemis;
 
     private void Start()
     {
@@ -26,7 +28,8 @@ public class SpawnCube : MonoBehaviour
         currentDeltaT -= Time.deltaTime;
         if (spawning && currentDeltaT <= 0f)
         {
-            Instantiate(spawnedObject, transform.position, Quaternion.identity, papa);
+            var newEnemy = Instantiate(spawnedObject, transform.position, Quaternion.identity, papa);
+            listeEnnemis.Add(newEnemy);
             currentDeltaT = maxDeltaT;
         }
     }

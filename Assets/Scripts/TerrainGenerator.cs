@@ -16,8 +16,8 @@ public class TerrainGenerator : MonoBehaviour
 
     void Awake()
     {
-        RandomizeGridValues();
-        //grid = csvReader.grid;
+        //RandomizeGridValues();
+        grid = csvReader.grid;
 
         for (int i = 0; i < grid.GetLength(0); i++)
         {

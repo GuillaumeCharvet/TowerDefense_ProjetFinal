@@ -24,9 +24,9 @@ public class CSVReader : MonoBehaviour
         {
             for (int j = 0; j < gridHeight; j++)
             {
+                //Debug.Log("i:"+i+"j:"+j+"grid:"+int.Parse(data[i + j * 28]));
                 grid[i, j] = int.Parse(data[i + j * 28]);
             }
-        }
-        
+        }        
     }
 }
