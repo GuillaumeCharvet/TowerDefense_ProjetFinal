@@ -11,9 +11,13 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField]
     private GameObject blockChemin, blockPlaine;
 
+    [SerializeField]
+    private CSVReader csvReader;
+
     void Awake()
     {
         RandomizeGridValues();
+        //grid = csvReader.grid;
 
         for (int i = 0; i < grid.GetLength(0); i++)
         {

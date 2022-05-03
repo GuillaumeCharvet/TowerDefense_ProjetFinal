@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chemin: []
   terrainGenerator: {fileID: 1101075120}
+  csvReader: {fileID: 1101075122}
   closedList: []
   openList: []
 --- !u!1 &705507993
@@ -407,6 +408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1101075121}
   - component: {fileID: 1101075120}
+  - component: {fileID: 1101075122}
   m_Layer: 0
   m_Name: TerrainGenerator
   m_TagString: Untagged
@@ -428,6 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockChemin: {fileID: 3797153821462311064, guid: 5f1be3939211b874a9f23b1a22bab2f1, type: 3}
   blockPlaine: {fileID: 8809711873052972099, guid: 70e7ae45f2dd39f479c7d6d030cb9d3b, type: 3}
+  csvReader: {fileID: 1101075122}
 --- !u!4 &1101075121
 Transform:
   m_ObjectHideFlags: 0
@@ -443,6 +446,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1101075122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101075119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae0d9de2d50d8f4fb3555558f2e13bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textAssetData: {fileID: 4900000, guid: 008531487087259468d847fd648ef908, type: 3}
 --- !u!1 &1879832618
 GameObject:
   m_ObjectHideFlags: 0

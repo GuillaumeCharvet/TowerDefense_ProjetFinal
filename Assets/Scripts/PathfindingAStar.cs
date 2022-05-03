@@ -19,11 +19,14 @@ public class PathfindingAStar : MonoBehaviour
     [SerializeField]
     private TerrainGenerator terrainGenerator;
     [SerializeField]
+    private CSVReader csvReader;
+    [SerializeField]
     private List<Noeud> closedList = new List<Noeud>(), openList = new List<Noeud>(); 
 
     public void Awake()
     {
         grid = terrainGenerator.grid;
+        //grid = csvReader.grid;
         depart = new Noeud();
         arrivee = new Noeud();
         depart.x = 0; depart.y = 0; arrivee.x = grid.GetLength(0) - 1; arrivee.y = grid.GetLength(1) - 1;
