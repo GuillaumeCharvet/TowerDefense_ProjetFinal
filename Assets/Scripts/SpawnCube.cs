@@ -16,7 +16,7 @@ public class SpawnCube : MonoBehaviour
 
     private void Start()
     {
-        maxDeltaT = 2f;
+        maxDeltaT = 0.3f;
         currentDeltaT = 0f;
     }
 

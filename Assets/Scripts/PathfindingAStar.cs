@@ -184,10 +184,8 @@ public class PathfindingAStar : MonoBehaviour
                     openList.Add(v);
                 }
             }
-            //Debug.Log("openList length 3 : " + openList.Count);
             closedList.Add(u);
             k++;
-            //Debug.Log("closedList length : " + closedList.Count);
             if (k > 10000)
             {
                 Debug.Log("CheminPlusCourt échoue après" + k + "itérations");

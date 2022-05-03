@@ -37,10 +37,14 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int j = 0; j < grid.GetLength(1); j++)
             {
-                grid[i, j] = (int) Mathf.Floor(Random.Range(0f, 1.5f));
+                grid[i, j] = (int) Mathf.Floor(Random.Range(0f, 1.6f));
             }
         }
         grid[0, 0] = 0;
+        grid[1, 2] = 0;
+        grid[2, 1] = 0;
+        grid[grid.GetLength(0) - 3, grid.GetLength(1) - 2] = 0;
+        grid[grid.GetLength(0) - 2, grid.GetLength(1) - 3] = 0;
         grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1] = 0;
     }
 }

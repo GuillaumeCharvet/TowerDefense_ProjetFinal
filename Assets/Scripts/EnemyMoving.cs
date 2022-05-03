@@ -9,10 +9,10 @@ public class EnemyMoving : MonoBehaviour
     private float lerpValue = 0;
     [SerializeField]
     private List<Vector3> listOfPositions;
-    private float height = 0.5f;
+    private float height = 1f;
     private int currentIndex = 0;
     private float currentLength;
-    private float speed = 4f;
+    private float speed = 10f;
 
     [SerializeField]
     private PathfindingAStar pathfindingAStar;
