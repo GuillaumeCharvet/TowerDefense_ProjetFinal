@@ -105,10 +105,10 @@ public class PathfindingAStar : MonoBehaviour
         return finaleListe;
     }
 
-    public List<Noeud> TrouverVoisinsDeNoeud(Noeud u)
+    public List<Noeud> TrouverVoisinsDeNoeud(Noeud u, int[,] _grid)
     {
         var listeRetour = new List<Noeud>();
-        if (u.x > 0 && grid[u.x - 1, u.y] == 0)
+        if (u.x > 0 && _grid[u.x - 1, u.y] == 0)
         {
             Noeud v = new Noeud();
             v.x = u.x - 1;
@@ -117,7 +117,7 @@ public class PathfindingAStar : MonoBehaviour
             v.heuristique = 0;
             listeRetour.Add(v);
         }
-        if (u.x < grid.GetLength(0) - 1 && grid[u.x + 1, u.y] == 0)
+        if (u.x < grid.GetLength(0) - 1 && _grid[u.x + 1, u.y] == 0)
         {
             Noeud v = new Noeud();
             v.x = u.x + 1;
@@ -126,7 +126,7 @@ public class PathfindingAStar : MonoBehaviour
             v.heuristique = 0;
             listeRetour.Add(v);
         }
-        if (u.y > 0 && grid[u.x, u.y - 1] == 0)
+        if (u.y > 0 && _grid[u.x, u.y - 1] == 0)
         {
             Noeud v = new Noeud();
             v.x = u.x;
@@ -135,7 +135,7 @@ public class PathfindingAStar : MonoBehaviour
             v.heuristique = 0;
             listeRetour.Add(v);
         }
-        if (u.y < grid.GetLength(1) - 1 && grid[u.x, u.y + 1] == 0)
+        if (u.y < grid.GetLength(1) - 1 && _grid[u.x, u.y + 1] == 0)
         {
             Noeud v = new Noeud();
             v.x = u.x;
@@ -167,7 +167,7 @@ public class PathfindingAStar : MonoBehaviour
         return false;
     }
 
-    public List<Noeud> CheminPlusCourt(int[,] grid, Noeud objectif, Noeud depart, GameObject enemy)
+    public List<Noeud> CheminPlusCourt(int[,] _grid, Noeud objectif, Noeud depart, GameObject enemy)
     {
         openList.Clear();
         closedList.Clear();
@@ -181,7 +181,7 @@ public class PathfindingAStar : MonoBehaviour
             {
                 return ReconstituerChemin(closedList, u, depart);
             }
-            var tvdn = TrouverVoisinsDeNoeud(u);
+            var tvdn = TrouverVoisinsDeNoeud(u, _grid);
             for (int i = 0; i < tvdn.Count; i++)
             {
                 var v = tvdn[i];
@@ -204,7 +204,7 @@ public class PathfindingAStar : MonoBehaviour
         var listeCheminSansTours = CheminPlusCourt(csvReader.gridWithoutTowers, objectif, depart, enemy);
         for (int i = 0; i < listeCheminSansTours.Count; i++)
         {
-            if (grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
+            if (_grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
             {
                 objectifX = listeCheminSansTours[i].x;
                 objectifY = listeCheminSansTours[i].y;
