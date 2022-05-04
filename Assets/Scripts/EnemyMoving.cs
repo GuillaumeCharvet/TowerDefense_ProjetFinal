@@ -19,7 +19,11 @@ public class EnemyMoving : MonoBehaviour
     [SerializeField]
     private SpawnCube spawnCube;
 
-    private void Start()
+    public bool vaDetruireUneTour = false;
+    public int objectifX;
+    public int objectifY;
+
+    void Awake()
     {
         spawnCube = GameObject.FindGameObjectWithTag("SpawnCube").GetComponent<SpawnCube>();
         pathfindingAStar = FindObjectOfType<PathfindingAStar>();

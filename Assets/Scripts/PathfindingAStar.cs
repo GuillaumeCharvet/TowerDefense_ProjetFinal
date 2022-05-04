@@ -13,6 +13,7 @@ public struct Noeud
 public class PathfindingAStar : MonoBehaviour
 {
     private int[,] grid;
+    public int departX, departY, arriveeX, arriveeY;
     public Noeud depart, arrivee;
     public List<Noeud> chemin;
 
@@ -23,16 +24,17 @@ public class PathfindingAStar : MonoBehaviour
     [SerializeField]
     private PlacementTour placementTour;
     [SerializeField]
-    private List<Noeud> closedList = new List<Noeud>(), openList = new List<Noeud>(); 
+    private List<Noeud> closedList = new List<Noeud>(), openList = new List<Noeud>();
+    public int objectifX, objectifY;
 
     public void Awake()
     {
         grid = terrainGenerator.grid;
         depart = new Noeud();
         arrivee = new Noeud();
-        depart.x = 0; depart.y = 27; arrivee.x = grid.GetLength(0) - 3; arrivee.y = 0;
+        depart.x = departX; depart.y = departY; arrivee.x = arriveeX; arrivee.y = arriveeY;
         depart.cout = 0; depart.heuristique = 0; arrivee.cout = 0; arrivee.heuristique = 0;
-        NouveauChemin(depart, arrivee);
+        NouveauChemin(depart, arrivee, null);
     }
 
     public int CompareParHeuristique(Noeud n1, Noeud n2)
@@ -165,7 +167,7 @@ public class PathfindingAStar : MonoBehaviour
         return false;
     }
 
-    public List<Noeud> CheminPlusCourt(int[,] grid, Noeud objectif, Noeud depart)
+    public List<Noeud> CheminPlusCourt(int[,] grid, Noeud objectif, Noeud depart, GameObject enemy)
     {
         openList.Clear();
         closedList.Clear();
@@ -199,16 +201,27 @@ public class PathfindingAStar : MonoBehaviour
                 break;
             }
         }
+        var listeCheminSansTours = CheminPlusCourt(csvReader.gridWithoutTowers, objectif, depart, enemy);
+        for (int i = 0; i < listeCheminSansTours.Count; i++)
+        {
+            if (grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
+            {
+                objectifX = listeCheminSansTours[i].x;
+                objectifY = listeCheminSansTours[i].y;
+                Debug.Log("Tourelle plus proche à virer : " + objectifX + ", " + objectifY);
+                break;
+            }
+        }
         Debug.Log("Pas de chemin trouvé");
         Debug.Break();
         return new List<Noeud>();        
     }
 
-    public void NouveauChemin(Noeud _depart, Noeud _arrivee)
+    public void NouveauChemin(Noeud _depart, Noeud _arrivee, GameObject enemy)
     {
         grid = terrainGenerator.grid;
         //grid = csvReader.grid;
         //placementTour.DebugLogGrid(grid);
-        chemin = CheminPlusCourt(grid, _arrivee, _depart);
+        chemin = CheminPlusCourt(grid, _arrivee, _depart, enemy);
     }
 }

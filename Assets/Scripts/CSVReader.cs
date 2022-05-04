@@ -10,6 +10,7 @@ public class CSVReader : MonoBehaviour
     const int gridHeight = 28, gridWidth = 28;
     [SerializeField]
     public int[,] grid = new int[gridHeight, gridWidth];
+    public int[,] gridWithoutTowers = new int[gridHeight, gridWidth];
 
     void Awake()
     {
@@ -26,6 +27,7 @@ public class CSVReader : MonoBehaviour
             {
                 //Debug.Log("i:"+i+"j:"+j+"grid:"+int.Parse(data[i + j * 28]));
                 grid[i, j] = int.Parse(data[i + j * 28]);
+                gridWithoutTowers[i, j] = int.Parse(data[i + j * 28]);
             }
         }        
     }

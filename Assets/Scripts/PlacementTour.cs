@@ -21,10 +21,9 @@ public class PlacementTour : MonoBehaviour
 
     void Start()
     {
-
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && isPlacingTower)
@@ -44,18 +43,26 @@ public class PlacementTour : MonoBehaviour
                     terrainGenerator.grid[xGrid, yGrid] = 1;
                     foreach (var enemy in spawnCube.listeEnnemis)
                     {
-                        var intX = (int) enemy.transform.position.x;
-                        var intY = (int) enemy.transform.position.z;
-                        var departEnemy = new Noeud();
-                        departEnemy.x = intX; departEnemy.y = intY; departEnemy.cout = 0; departEnemy.heuristique = 0f;
-                        pathfindingAStar.NouveauChemin(departEnemy, pathfindingAStar.arrivee);
-                        var enemyMoving = enemy.GetComponent<EnemyMoving>();
-                        var cheminDeVector3 = enemyMoving.NoeudToVector3(pathfindingAStar.chemin);
-                        enemyMoving.listOfPositions = cheminDeVector3;
-                        enemyMoving.currentIndex = 0;
-                        enemyMoving.currentLength = enemyMoving.GetNewCurrentLength();
+                        if (enemy.transform.position != Vector3.zero)
+                        {
+                            var enemyMoving = enemy.GetComponent<EnemyMoving>();
+                            var intX = (int)enemy.transform.position.x;
+                            var intY = (int)enemy.transform.position.z;
+                            if (IsTowerCoordoneesInList(xGrid, yGrid, enemyMoving.listOfPositions))
+                            {
+                                var departEnemy = new Noeud();
+                                departEnemy.x = intX; departEnemy.y = intY; departEnemy.cout = 0; departEnemy.heuristique = 0f;
+                                pathfindingAStar.NouveauChemin(departEnemy, pathfindingAStar.arrivee, enemy);
+                                var cheminDeVector3 = enemyMoving.NoeudToVector3(pathfindingAStar.chemin);
+                                enemyMoving.listOfPositions = cheminDeVector3;
+                                enemyMoving.listOfPositions.Insert(0, enemyMoving.transform.position);
+                                enemyMoving.currentIndex = 0;
+                                enemyMoving.currentLength = enemyMoving.GetNewCurrentLength();
+                            }
+                            else Debug.Log("pathfinding évité");
+                        }
                     }
-                    pathfindingAStar.NouveauChemin(pathfindingAStar.depart, pathfindingAStar.arrivee);
+                    pathfindingAStar.NouveauChemin(pathfindingAStar.depart, pathfindingAStar.arrivee, null);
                     Instantiate(towerPrefab, hit.transform.position + Vector3.up, hit.transform.rotation);
                 }
             }
@@ -68,6 +75,15 @@ public class PlacementTour : MonoBehaviour
         {            
             Debug.Log("" + _grid[i, 0]+_grid[i, 1]+_grid[i, 2]+_grid[i, 3]+_grid[i, 4]+_grid[i, 5]+_grid[i, 6]+_grid[i, 7]+_grid[i, 8]+_grid[i, 9]+_grid[i, 10]+_grid[i, 11]+_grid[i, 12]+_grid[i, 13]+_grid[i, 14]+_grid[i, 15]+_grid[i, 16]+_grid[i, 17]+_grid[i, 18]+_grid[i, 19]+_grid[i, 20]+_grid[i, 21]+_grid[i, 22]+_grid[i, 23]+_grid[i, 24]+_grid[i, 25]+_grid[i, 26]+_grid[i, 27]);
         }
+    }
+
+    public bool IsTowerCoordoneesInList(int i, int j, List<Vector3> liste)
+    {
+        for (int k = 0; k < liste.Count; k++)
+        {
+            if ((int)liste[k].x == i && (int)liste[k].z == j) return true;
+        }
+        return false;
     }
 
     public void startPlacingTowers()
