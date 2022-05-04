@@ -202,19 +202,25 @@ public class PathfindingAStar : MonoBehaviour
             }
         }
         var listeCheminSansTours = CheminPlusCourt(csvReader.gridWithoutTowers, objectif, depart, enemy);
+        var tourelleTrouveeSurChemin = false;
+        int posTourelleDansListe = 0;
         for (int i = 0; i < listeCheminSansTours.Count; i++)
         {
-            if (_grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
+            if (!tourelleTrouveeSurChemin && _grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
             {
                 objectifX = listeCheminSansTours[i].x;
                 objectifY = listeCheminSansTours[i].y;
                 Debug.Log("Tourelle plus proche à virer : " + objectifX + ", " + objectifY);
-                break;
+                tourelleTrouveeSurChemin = true;
+                posTourelleDansListe = i;
+                listeCheminSansTours.RemoveAt(posTourelleDansListe);
             }
-        }
-        Debug.Log("Pas de chemin trouvé");
-        Debug.Break();
-        return new List<Noeud>();        
+            else
+            {
+                listeCheminSansTours.RemoveAt(posTourelleDansListe);
+            }
+        }        
+        return listeCheminSansTours;
     }
 
     public void NouveauChemin(Noeud _depart, Noeud _arrivee, GameObject enemy)

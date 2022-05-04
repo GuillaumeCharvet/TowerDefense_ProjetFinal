@@ -63,12 +63,11 @@ public class PlacementTour : MonoBehaviour
                                 enemyMoving.currentIndex = 0;
                                 enemyMoving.currentLength = enemyMoving.GetNewCurrentLength();
                             }
-                            else Debug.Log("pathfinding évité");
                         }
                     }
                     pathfindingAStar.NouveauChemin(pathfindingAStar.depart, pathfindingAStar.arrivee, null);
                     var newTower = Instantiate(towerPrefab, hit.transform.position + Vector3.up, hit.transform.rotation);
-                    newTower.name = "Tower" + xGrid + yGrid;
+                    newTower.name = "Tower" + xGrid + ":" + yGrid;
                     towerMatrix[xGrid, yGrid] = newTower;
                 }
             }
