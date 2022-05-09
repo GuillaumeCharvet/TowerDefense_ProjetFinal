@@ -56,8 +56,13 @@ public class PlacementTour : MonoBehaviour
                             {
                                 var departEnemy = new Noeud();
                                 departEnemy.x = intX; departEnemy.y = intY; departEnemy.cout = 0; departEnemy.heuristique = 0f;
-                                pathfindingAStar.NouveauChemin(departEnemy, pathfindingAStar.arrivee, enemy);
+                                bool doitAttaque;
+                                int potentielX, potentielY;
+                                pathfindingAStar.NouveauChemin(departEnemy, pathfindingAStar.arrivee, enemy, out doitAttaque, out potentielX, out potentielY);
                                 var cheminDeVector3 = enemyMoving.NoeudToVector3(pathfindingAStar.chemin);
+                                enemyMoving.vaDetruireUneTour = doitAttaque;
+                                enemyMoving.objectifX = potentielX;
+                                enemyMoving.objectifY = potentielY;
                                 enemyMoving.listOfPositions = cheminDeVector3;
                                 enemyMoving.listOfPositions.Insert(0, enemyMoving.transform.position);
                                 enemyMoving.currentIndex = 0;

@@ -34,7 +34,7 @@ public class PathfindingAStar : MonoBehaviour
         arrivee = new Noeud();
         depart.x = departX; depart.y = departY; arrivee.x = arriveeX; arrivee.y = arriveeY;
         depart.cout = 0; depart.heuristique = 0; arrivee.cout = 0; arrivee.heuristique = 0;
-        NouveauChemin(depart, arrivee, null);
+        NouveauChemin(depart, arrivee, null, out );
     }
 
     public int CompareParHeuristique(Noeud n1, Noeud n2)
@@ -166,8 +166,72 @@ public class PathfindingAStar : MonoBehaviour
         }
         return false;
     }
+    public List<Noeud> CheminPlusCourt(int[,] _grid, Noeud objectif, Noeud depart, GameObject enemy, out bool aggro, out int objX, out int objY)
+    {
+        openList.Clear();
+        closedList.Clear();
+        openList.Add(depart);
+        int k = 0;
+        while (openList.Count > 0)
+        {
+            var u = TrouveNoeudMin(openList);
+            openList.Remove(u);
+            if (u.x == objectif.x && u.y == objectif.y)
+            {
+                aggro = false;
+                objX = 0;
+                objY = 0;
+                return ReconstituerChemin(closedList, u, depart);
+            }
+            var tvdn = TrouverVoisinsDeNoeud(u, _grid);
+            for (int i = 0; i < tvdn.Count; i++)
+            {
+                var v = tvdn[i];
+                if (!EstDansListe(closedList, v, 0) && !EstDansListe(openList, v, 1))
+                {
+                    v.cout = u.cout + 1;
+                    v.heuristique = v.cout + Mathf.Sqrt(Mathf.Pow(v.x - objectif.x, 2) + Mathf.Pow(v.y - objectif.y, 2));
+                    openList.Add(v);
+                }
+            }
+            closedList.Add(u);
+            k++;
+            if (k > 10000)
+            {
+                Debug.Log("CheminPlusCourt échoue après" + k + "itérations");
+                Debug.Break();
+                break;
+            }
+        }
+        bool aggro2; int objX2, objY2;
+        var listeCheminSansTours = CheminPlusCourt(csvReader.gridWithoutTowers, objectif, depart, enemy, out aggro2, out objX2, out objY2);
+        var tourelleTrouveeSurChemin = false;
+        int posTourelleDansListe = 0;
+        int initialLength = listeCheminSansTours.Count;
+        EnemyMoving eM = enemy.GetComponent<EnemyMoving>();
+        for (int i = 0; i < initialLength; i++)
+        {
+            if (!tourelleTrouveeSurChemin && _grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
+            {
+                int objectifX = listeCheminSansTours[i].x;
+                int objectifY = listeCheminSansTours[i].y;                
+                Debug.Log("Tourelle plus proche à virer : " + objectifX + ", " + objectifY);
+                tourelleTrouveeSurChemin = true;
+                posTourelleDansListe = i;
+                listeCheminSansTours.RemoveAt(posTourelleDansListe);
+            }
+            else if (tourelleTrouveeSurChemin)
+            {
+                listeCheminSansTours.RemoveAt(posTourelleDansListe);
+            }
+        }
+        aggro = true;
+        objX = objectifX;
+        objY = objectifX;
+        return listeCheminSansTours;
+    }
 
-    public List<Noeud> CheminPlusCourt(int[,] _grid, Noeud objectif, Noeud depart, GameObject enemy)
+    /*public List<Noeud> CheminPlusCourt(int[,] _grid, Noeud objectif, Noeud depart, GameObject enemy, out bool aggro, out int objX, out int objY)
     {
         openList.Clear();
         closedList.Clear();
@@ -179,6 +243,7 @@ public class PathfindingAStar : MonoBehaviour
             openList.Remove(u);
             if (u.x == objectif.x && u.y == objectif.y)
             {
+                aggro = false;
                 return ReconstituerChemin(closedList, u, depart);
             }
             var tvdn = TrouverVoisinsDeNoeud(u, _grid);
@@ -201,33 +266,39 @@ public class PathfindingAStar : MonoBehaviour
                 break;
             }
         }
+        bool balec;
         var listeCheminSansTours = CheminPlusCourt(csvReader.gridWithoutTowers, objectif, depart, enemy);
         var tourelleTrouveeSurChemin = false;
         int posTourelleDansListe = 0;
-        for (int i = 0; i < listeCheminSansTours.Count; i++)
+        int initialLength = listeCheminSansTours.Count;
+        EnemyMoving eM = enemy.GetComponent<EnemyMoving>();
+        for (int i = 0; i < initialLength; i++)
         {
             if (!tourelleTrouveeSurChemin && _grid[listeCheminSansTours[i].x, listeCheminSansTours[i].y] == 1)
             {
-                objectifX = listeCheminSansTours[i].x;
-                objectifY = listeCheminSansTours[i].y;
+                int objectifX = listeCheminSansTours[i].x;
+                int objectifY = listeCheminSansTours[i].y;
+                eM.objectifX = objectifX;
+                eM.objectifY = objectifX;
                 Debug.Log("Tourelle plus proche à virer : " + objectifX + ", " + objectifY);
                 tourelleTrouveeSurChemin = true;
                 posTourelleDansListe = i;
                 listeCheminSansTours.RemoveAt(posTourelleDansListe);
             }
-            else
+            else if (tourelleTrouveeSurChemin)
             {
                 listeCheminSansTours.RemoveAt(posTourelleDansListe);
             }
-        }        
+        }
+        aggro = true;
         return listeCheminSansTours;
-    }
+    }*/
 
-    public void NouveauChemin(Noeud _depart, Noeud _arrivee, GameObject enemy)
+    public void NouveauChemin(Noeud _depart, Noeud _arrivee, GameObject enemy, out bool aggro, out int objX, out int objY)
     {
         grid = terrainGenerator.grid;
         //grid = csvReader.grid;
         //placementTour.DebugLogGrid(grid);
-        chemin = CheminPlusCourt(grid, _arrivee, _depart, enemy);
+        chemin = CheminPlusCourt(grid, _arrivee, _depart, enemy, out aggro, out objX, out objY);
     }
 }

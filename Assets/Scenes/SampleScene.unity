@@ -1393,5 +1393,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: blinky
       objectReference: {fileID: 0}
+    - target: {fileID: 657319081879774283, guid: cb360a90b667b064bb39ea9a41b4db7b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb360a90b667b064bb39ea9a41b4db7b, type: 3}
