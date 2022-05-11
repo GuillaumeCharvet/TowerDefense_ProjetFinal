@@ -34,7 +34,9 @@ public class PathfindingAStar : MonoBehaviour
         arrivee = new Noeud();
         depart.x = departX; depart.y = departY; arrivee.x = arriveeX; arrivee.y = arriveeY;
         depart.cout = 0; depart.heuristique = 0; arrivee.cout = 0; arrivee.heuristique = 0;
-        NouveauChemin(depart, arrivee, null, out );
+        bool ptitBool;
+        int _objX, _objY;
+        NouveauChemin(depart, arrivee, null, out ptitBool, out _objX, out _objY);
     }
 
     public int CompareParHeuristique(Noeud n1, Noeud n2)
